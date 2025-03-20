@@ -2,11 +2,12 @@ from fastapi import FastAPI, HTTPException, Query
 from services import create_schedule, get_schedules, get_schedule_detail, calculate_schedule_times, get_next_takings
 from models import MedicationSchedule
 from datetime import time
+from schemas import ScheduleCreate
 
 app = FastAPI()
 
 @app.post("/schedule")
-async def create_new_schedule(schedule):
+async def create_new_schedule(schedule: ScheduleCreate):
     new_schedule = MedicationSchedule(
         name=schedule.name,
         frequency=schedule.frequency,
