@@ -1,8 +1,15 @@
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import asyncpg
 from config import settings
 
+class Database:
+    def __init__(self):
+        self.pool: asyncpg.Pool = None
 
-def get_db():
-    conn = psycopg2.connect(settings.database_url, cursor_factory=RealDictCursor)
-    return conn
+    async def create_pool(self):
+        self.pool = await asyncpg.create_pool(
+            dsn=settings.database_url,
+            min_size=5,
+            max_size=20
+        )
+
+db = Database()

@@ -1,81 +1,38 @@
-from datetime import datetime, timedelta, time
-from typing import List, Dict
+from datetime import datetime, timedelta
 from models import MedicationSchedule
-from database import get_db
+from database import db
+from utils import calculate_schedule_times
 
-def create_schedule(schedule: MedicationSchedule):
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("""
-        INSERT INTO schedules (schedule_id, name, frequency, duration, user_id, start_time, end_time)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
-    """, (
-        schedule.schedule_id, schedule.name, schedule.frequency, 
-        schedule.duration, schedule.user_id, schedule.start_time, schedule.end_time
-    ))
-    conn.commit()
-    cur.close()
-    conn.close()
+async def create_schedule(schedule: MedicationSchedule):
+    async with db.pool.acquire() as conn:
+        await conn.execute("""
+            INSERT INTO schedules (schedule_id, user_id, name, frequency, duration, start_time, end_time)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+        """, *(
+            schedule.schedule_id, schedule.user_id,
+            schedule.name, schedule.frequency, schedule.duration,
+            schedule.start_time, schedule.end_time
+        ))
 
-def get_schedules(user_id):
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("SELECT schedule_id FROM schedules WHERE user_id = %s", (user_id,))
-    schedules = cur.fetchall()
-    cur.close()
-    conn.close()
-    return [s['schedule_id'] for s in schedules]
+async def get_schedules(user_id):
+    async with db.pool.acquire() as conn:
+        schedules = await conn.fetch("SELECT schedule_id FROM schedules WHERE user_id = $1", user_id)
+        return [s['schedule_id'] for s in schedules]
 
-def get_schedule_detail(user_id, schedule_id):
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT name, frequency, duration, start_time, end_time FROM schedules
-        WHERE user_id = %s AND schedule_id = %s
-    """, (user_id, schedule_id))
-    detail = cur.fetchone()
-    cur.close()
-    conn.close()
-    return detail
+async def get_schedule_detail(user_id, schedule_id):
+    async with db.pool.acquire() as conn:
+        detail = await conn.fetchrow("""
+            SELECT name, frequency, duration, start_time, end_time FROM schedules
+            WHERE user_id = $1 AND schedule_id = $2
+        """, user_id, schedule_id)
+        return detail
 
-def calculate_schedule_times(frequency, start_time, end_time):
-    times = []
-    current_time = datetime.now().replace(
-        hour=start_time.hour, 
-        minute=start_time.minute, 
-        second=0, 
-        microsecond=0
-    )
-    end_time = datetime.now().replace(
-        hour=end_time.hour, 
-        minute=end_time.minute, 
-        second=0, 
-        microsecond=0
-    )
-
-    if frequency == "1 раз в день":
-        times.append(current_time.strftime('%H:%M'))
-    elif frequency == "каждый час":
-        while current_time <= end_time:
-            times.append(current_time.strftime('%H:%M'))
-            current_time += timedelta(hours=1)
-    elif frequency == "каждые 15 минут":
-        while current_time <= end_time:
-            times.append(current_time.strftime('%H:%M'))
-            current_time += timedelta(minutes=15)
-
-    return times
-
-def get_next_takings(user_id: str):
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT name, frequency, start_time, end_time FROM schedules
-        WHERE user_id = %s
-    """, (user_id,))
-    schedules = cur.fetchall()
-    cur.close()
-    conn.close()
+async def get_takings(user_id):
+    async with db.pool.acquire() as conn:
+        schedules = await conn.fetch("""
+            SELECT name, frequency, start_time, end_time FROM schedules
+            WHERE user_id = $1
+        """, user_id)
 
     next_takings = []
     now = datetime.now()
