@@ -1,6 +1,7 @@
 from fastapi import HTTPException, Query, APIRouter
-from services import create_schedule, get_schedules, get_schedule_detail, calculate_schedule_times, get_takings
-from models import MedicationSchedule, ScheduleCreate, ScheduleResponse, ScheduleDetail, NextTakings
+from handler import create_schedule, get_schedules, get_schedule_detail, calculate_schedule_times, get_takings
+from models_auto import ScheduleCreate, ScheduleResponse, ScheduleDetail, NextTakings
+from med_schedule_model import MedicationSchedule
 from typing import List
 from datetime import time
 from utils import generate_schedule_id

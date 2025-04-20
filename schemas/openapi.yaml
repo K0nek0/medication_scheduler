@@ -1,0 +1,224 @@
+openapi: 3.1.0
+info:
+  title: FastAPI
+  version: 0.1.0
+paths:
+  /api/v1/schedule:
+    post:
+      summary: Create New Schedule
+      operationId: create_new_schedule_api_v1_schedule_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleCreate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      summary: Get Schedule
+      operationId: get_schedule_api_v1_schedule_get
+      parameters:
+      - name: user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+          description: ID пользователя
+          title: User Id
+        description: ID пользователя
+      - name: schedule_id
+        in: query
+        required: true
+        schema:
+          type: integer
+          description: ID расписания
+          title: Schedule Id
+        description: ID расписания
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleDetail'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/schedules:
+    get:
+      summary: Get User Schedules
+      operationId: get_user_schedules_api_v1_schedules_get
+      parameters:
+      - name: user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+          description: ID пользователя
+          title: User Id
+        description: ID пользователя
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+                title: Response Get User Schedules Api V1 Schedules Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/next_takings:
+    get:
+      summary: Get Next Takings
+      operationId: get_next_takings_api_v1_next_takings_get
+      parameters:
+      - name: user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+          description: ID пользователя
+          title: User Id
+        description: ID пользователя
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NextTakings'
+                title: Response Get Next Takings Api V1 Next Takings Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    NextTakings:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        time:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Time
+      type: object
+      title: NextTakings
+    ScheduleCreate:
+      properties:
+        user_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: User Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        frequency:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Frequency
+        duration:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Duration
+      type: object
+      title: ScheduleCreate
+    ScheduleDetail:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        frequency:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Frequency
+        duration:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Duration
+        schedule:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Schedule
+      type: object
+      title: ScheduleDetail
+    ScheduleResponse:
+      properties:
+        schedule_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Schedule Id
+      type: object
+      title: ScheduleResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

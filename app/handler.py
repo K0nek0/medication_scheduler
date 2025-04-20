@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from models import MedicationSchedule
+from med_schedule_model import MedicationSchedule
 from database import db
 from utils import calculate_schedule_times
 
