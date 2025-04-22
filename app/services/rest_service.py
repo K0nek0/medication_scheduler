@@ -1,10 +1,10 @@
 from fastapi import HTTPException, Query, APIRouter
-from handler import create_schedule, get_schedules, get_schedule_detail, calculate_schedule_times, get_takings
-from models_auto import ScheduleCreate, ScheduleResponse, ScheduleDetail, NextTakings
-from med_schedule_model import MedicationSchedule
+from core.handler import create_schedule, get_schedules, get_schedule_detail, calculate_schedule_times, get_takings
+from models.models_auto import ScheduleCreate, ScheduleResponse, ScheduleDetail, NextTakings
+from models.med_schedule_model import MedicationSchedule
 from typing import List
 from datetime import time
-from utils import generate_schedule_id
+from core.utils import generate_schedule_id
 
 router = APIRouter(prefix="/api/v1")
 

@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
-from med_schedule_model import MedicationSchedule
-from database import db
-from utils import calculate_schedule_times
+from models.med_schedule_model import MedicationSchedule
+from db.database import db
+from core.utils import calculate_schedule_times
 
 async def create_schedule(schedule: MedicationSchedule):
     async with db.pool.acquire() as conn:

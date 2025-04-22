@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package med_schedule;
+
+service MedicationScheduleService {
+  // Создание нового расписания
+  rpc CreateSchedule (ScheduleCreateRequest) returns (ScheduleResponse) {}
+  
+  // Получение списка расписаний пользователя
+  rpc GetUserSchedules (UserSchedulesRequest) returns (UserSchedulesResponse) {}
+  
+  // Получение деталей конкретного расписания
+  rpc GetScheduleDetail (ScheduleDetailRequest) returns (ScheduleDetailResponse) {}
+  
+  // Получение ближайших приёмов лекарств
+  rpc GetNextTakings (NextTakingsRequest) returns (NextTakingsResponse) {}
+}
+
+message ScheduleCreateRequest {
+  int32 user_id = 1;
+  string name = 2;
+  string frequency = 3;
+  string duration = 4;
+}
+
+message ScheduleResponse {
+  int32 schedule_id = 1;
+}
+
+message UserSchedulesRequest {
+  int32 user_id = 1;
+}
+
+message UserSchedulesResponse {
+  repeated int32 schedule_ids = 1;
+}
+
+message ScheduleDetailRequest {
+  int32 user_id = 1;
+  int32 schedule_id = 2;
+}
+
+message ScheduleDetailResponse {
+  string name = 1;
+  string frequency = 2;
+  string duration = 3;
+  repeated string schedule = 4;
+}
+
+message NextTakingsRequest {
+  int32 user_id = 1;
+}
+
+message NextTaking {
+  string name = 1;
+  string time = 2;
+}
+
+message NextTakingsResponse {
+  repeated NextTaking takings = 1;
+}

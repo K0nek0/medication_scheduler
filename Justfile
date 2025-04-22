@@ -1,7 +1,7 @@
 set shell := ["powershell.exe", "-NoProfile", "-Command"]
     
 generate-models:
-    datamodel-codegen --input ./schemas/openapi.yaml --output ./app/models_auto.py --force
+    datamodel-codegen --input ./schemas/openapi.yaml --output ./app/models/models_auto.py --force
 
-# generate-client:
-#     openapi-python-client generate --path ./schemas/openapi.yaml --output-path api_client --overwrite
+generate-grpc:
+    python -m grpc_tools.protoc -Iapp/protos --python_out=app/grpc_package --grpc_python_out=app/grpc_package app/protos/med_schedule.proto
