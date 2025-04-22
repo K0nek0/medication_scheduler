@@ -3,16 +3,9 @@ syntax = "proto3";
 package med_schedule;
 
 service MedicationScheduleService {
-  // Создание нового расписания
   rpc CreateSchedule (ScheduleCreateRequest) returns (ScheduleResponse) {}
-  
-  // Получение списка расписаний пользователя
   rpc GetUserSchedules (UserSchedulesRequest) returns (UserSchedulesResponse) {}
-  
-  // Получение деталей конкретного расписания
   rpc GetScheduleDetail (ScheduleDetailRequest) returns (ScheduleDetailResponse) {}
-  
-  // Получение ближайших приёмов лекарств
   rpc GetNextTakings (NextTakingsRequest) returns (NextTakingsResponse) {}
 }
 
