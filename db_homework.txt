@@ -1,0 +1,135 @@
+2)
+-- Создание таблицы developers
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE developers (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    name TEXT NOT NULL,
+    department TEXT NOT NULL,
+    geolocation POINT NOT NULL,
+    last_known_ip INET NOT NULL,
+    is_available BOOLEAN NOT NULL
+);
+
+
+3)
+-- Добавление 20 записей
+
+INSERT INTO developers (name, department, geolocation, last_known_ip, is_available)
+VALUES
+    ('James Smith', 'backend', point(54.710, 20.510), '192.168.1.10', TRUE),
+    ('Mary Johnson', 'frontend', point(54.715, 20.515), '192.168.1.11', FALSE),
+    ('John Williams', 'ios', point(54.720, 20.520), '192.168.1.12', TRUE),
+    ('Patricia Brown', 'android', point(54.725, 20.525), '192.168.1.13', FALSE),
+    ('Robert Jones', 'backend', point(54.730, 20.530), '192.168.1.14', TRUE),
+    ('James Johnson', 'frontend', point(54.735, 20.535), '192.168.1.15', FALSE),
+    ('Mary Williams', 'ios', point(54.740, 20.540), '192.168.1.16', TRUE),
+    ('John Brown', 'android', point(54.745, 20.545), '192.168.1.17', FALSE),
+    ('Patricia Jones', 'backend', point(54.750, 20.550), '192.168.1.18', TRUE),
+    ('Robert Smith', 'frontend', point(54.755, 20.555), '192.168.1.19', FALSE),
+    ('James Williams', 'ios', point(54.760, 20.560), '192.168.1.20', TRUE),
+    ('Mary Brown', 'android', point(54.765, 20.565), '192.168.1.21', FALSE),
+    ('John Jones', 'backend', point(54.770, 20.570), '192.168.1.22', TRUE),
+    ('Patricia Smith', 'frontend', point(54.775, 20.575), '192.168.1.23', FALSE),
+    ('Robert Johnson', 'ios', point(54.780, 20.580), '192.168.1.24', TRUE),
+    ('James Brown', 'android', point(54.785, 20.585), '192.168.1.25', FALSE),
+    ('Mary Jones', 'backend', point(54.790, 20.590), '192.168.1.26', TRUE),
+    ('John Smith', 'frontend', point(54.795, 20.595), '192.168.1.27', FALSE),
+    ('Patricia Johnson', 'ios', point(54.800, 20.600), '192.168.1.28', TRUE),
+    ('Robert Williams', 'android', point(54.805, 20.605), '192.168.1.29', FALSE);
+
+
+-- Вывод всех записей
+
+SELECT * FROM developers;
+
+"e1fac60a-2359-4265-beb0-a91bc22849e7"	"James Smith"	"backend"	"(54.71,20.51)"	"192.168.1.10"	true
+"7f64d672-4ae1-41b7-8c36-7136f6bfa2a8"	"Mary Johnson"	"frontend"	"(54.715,20.515)"	"192.168.1.11"	false
+"cd94934c-86dc-4b43-9a75-0e831f72addf"	"John Williams"	"ios"	"(54.72,20.52)"	"192.168.1.12"	true
+"ef9ba163-f8a7-430c-873d-afef711c431e"	"Patricia Brown"	"android"	"(54.725,20.525)"	"192.168.1.13"	false
+"5c889f82-bc0a-4c22-b768-535d0a067e5d"	"Robert Jones"	"backend"	"(54.73,20.53)"	"192.168.1.14"	true
+"f9ae4748-cad7-40bc-9036-77e71b591692"	"James Johnson"	"frontend"	"(54.735,20.535)"	"192.168.1.15"	false
+"601536f5-ff6a-4b93-a3c0-a416f946dbc3"	"Mary Williams"	"ios"	"(54.74,20.54)"	"192.168.1.16"	true
+"7e18945b-6124-4169-8ea9-4cb54a190068"	"John Brown"	"android"	"(54.745,20.545)"	"192.168.1.17"	false
+"e796c219-be5b-48d2-ae83-eb35cdf01fe2"	"Patricia Jones"	"backend"	"(54.75,20.55)"	"192.168.1.18"	true
+"2f60935a-a9c8-4757-b790-f2ff2609bea8"	"Robert Smith"	"frontend"	"(54.755,20.555)"	"192.168.1.19"	false
+"530545b6-05e0-4186-875c-fa794964d552"	"James Williams"	"ios"	"(54.76,20.56)"	"192.168.1.20"	true
+"65b03958-4699-4f89-a7cc-2df5fd9395d2"	"Mary Brown"	"android"	"(54.765,20.565)"	"192.168.1.21"	false
+"584d02fc-9c7b-4f60-a7ee-3f81d88dd441"	"John Jones"	"backend"	"(54.77,20.57)"	"192.168.1.22"	true
+"18396285-71d7-435f-8f43-f85cd3aef485"	"Patricia Smith"	"frontend"	"(54.775,20.575)"	"192.168.1.23"	false
+"46894b14-9b4e-4e33-a933-5cf23d4340f6"	"Robert Johnson"	"ios"	"(54.78,20.58)"	"192.168.1.24"	true
+"d7bb1fbf-4fb3-42dc-9ed8-5135e2939358"	"James Brown"	"android"	"(54.785,20.585)"	"192.168.1.25"	false
+"2d7aa518-3a31-4f99-8371-d335efab0dfe"	"Mary Jones"	"backend"	"(54.79,20.59)"	"192.168.1.26"	true
+"9d5150f5-f9cf-45a7-9d2f-3f5be18d0800"	"John Smith"	"frontend"	"(54.795,20.595)"	"192.168.1.27"	false
+"35b111e0-307b-442e-a3d8-1dcbf6969dce"	"Patricia Johnson"	"ios"	"(54.8,20.6)"	"192.168.1.28"	true
+"077eda23-8a3c-48bd-ae44-e01ddf6143f1"	"Robert Williams"	"android"	"(54.805,20.605)"	"192.168.1.29"	false
+
+
+4)
+-- Запрос 1
+EXPLAIN SELECT * FROM developers WHERE name LIKE 'James%';
+
+"Seq Scan on developers  (cost=0.00..16.50 rows=3 width=129)"
+"  Filter: (name ~~ 'James%'::text)"
+
+-- Запрос 2
+EXPLAIN SELECT * FROM developers WHERE department = 'backend';
+
+"Seq Scan on developers  (cost=0.00..16.50 rows=3 width=129)"
+"  Filter: (department = 'backend'::text)"
+
+-- Запрос 3
+EXPLAIN SELECT * FROM developers WHERE last_known_ip = '192.168.1.10';
+
+"Seq Scan on developers  (cost=0.00..16.50 rows=3 width=129)"
+"  Filter: (last_known_ip = '192.168.1.10'::inet)"
+
+-- Запрос 4
+EXPLAIN SELECT * FROM developers WHERE is_available = TRUE;
+
+"Seq Scan on developers  (cost=0.00..15.20 rows=260 width=129)"
+"  Filter: is_available"
+
+
+-- Задача со звездочкой: разработчики в радиусе 10 км от Калининграда
+CREATE EXTENSION IF NOT EXISTS cube;
+CREATE EXTENSION IF NOT EXISTS earthdistance;
+
+SELECT * FROM developers 
+WHERE earth_distance(
+    ll_to_earth(54.710, 20.510), 
+    ll_to_earth(geolocation[0], geolocation[1])
+) <= 10000;
+
+
+5)
+-- Индекс для поля name
+CREATE INDEX idx_developers_name ON developers (name);
+
+-- Индекс для поля department
+CREATE INDEX idx_developers_department ON developers (department);
+
+-- Индекс для поля last_known_ip
+CREATE INDEX idx_developers_ip ON developers (last_known_ip);
+
+-- Индекс для поля is_available
+CREATE INDEX idx_developers_available ON developers (is_available);
+
+-- Индекс для геолокации
+CREATE EXTENSION IF NOT EXISTS earthdistance;
+CREATE INDEX idx_developers_geolocation ON developers USING gist (ll_to_earth(geolocation[0], geolocation[1]));
+
+
+6)
+"Seq Scan on developers  (cost=0.00..1.25 rows=1 width=129)"
+"  Filter: (name ~~ 'James%'::text)"
+
+"Seq Scan on developers  (cost=0.00..1.25 rows=1 width=129)"
+"  Filter: (department = 'backend'::text)"
+
+"Seq Scan on developers  (cost=0.00..1.25 rows=1 width=129)"
+"  Filter: (last_known_ip = '192.168.1.10'::inet)"
+
+"Seq Scan on developers  (cost=0.00..1.20 rows=10 width=129)"
+"  Filter: is_available"
