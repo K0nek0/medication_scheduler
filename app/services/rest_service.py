@@ -5,10 +5,12 @@ from models.med_schedule_model import MedicationSchedule
 from typing import List
 from datetime import time
 from core.utils import generate_schedule_id
+# from logger.business_logger import business_logger
 
 router = APIRouter(prefix="/api/v1")
 
 @router.post("/schedule", response_model=ScheduleResponse)
+# @business_logger("create_schedule")
 async def create_new_schedule(schedule: ScheduleCreate):
     new_schedule = MedicationSchedule(
         schedule_id = generate_schedule_id(user_id=schedule.user_id),
@@ -23,10 +25,12 @@ async def create_new_schedule(schedule: ScheduleCreate):
     return {"schedule_id": new_schedule.schedule_id}
 
 @router.get("/schedules", response_model=List[int])
+# @business_logger("get_user_schedules")
 async def get_user_schedules(user_id: int = Query(..., description="ID пользователя")):
     return await get_schedules(user_id)
 
 @router.get("/schedule", response_model=ScheduleDetail)
+# @business_logger("get_schedule_detail")
 async def get_schedule(
     user_id: int = Query(..., description="ID пользователя"),
     schedule_id: int = Query(..., description="ID расписания")):
@@ -44,5 +48,6 @@ async def get_schedule(
     }
 
 @router.get("/next_takings", response_model=List[NextTakings])
+# @business_logger("get_next_takings")
 async def get_next_takings(user_id: int = Query(..., description="ID пользователя")):
     return await get_takings(user_id)
