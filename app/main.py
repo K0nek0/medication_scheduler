@@ -7,22 +7,23 @@ from grpc_package import med_schedule_pb2_grpc
 import grpc
 from concurrent import futures
 import asyncio
+from typing import AsyncGenerator, Any
 # from logger.logging_config import configure_logging
 # from logger.logging_middleware import APILoggingMiddleware
 
+async def serve():
+    server = grpc.aio.server(futures.ThreadPoolExecutor(max_workers=10))
+    med_schedule_pb2_grpc.add_MedicationScheduleServiceServicer_to_server(
+        MedicationScheduleServicer(), server
+    )
+    server.add_insecure_port('[::]:50051')
+    await server.start()
+    print("gRPC сервер запущен на порту 50051")
+    await server.wait_for_termination()
+    
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def _lifespan(app: FastAPI) -> AsyncGenerator[dict[str, Any], None]:
     await db.create_pool()
-
-    async def serve():
-        server = grpc.aio.server(futures.ThreadPoolExecutor(max_workers=10))
-        med_schedule_pb2_grpc.add_MedicationScheduleServiceServicer_to_server(
-            MedicationScheduleServicer(), server
-        )
-        server.add_insecure_port('[::]:50051')
-        await server.start()
-        print("gRPC сервер запущен на порту 50051")
-        await server.wait_for_termination()
 
     grpc_task = asyncio.create_task(serve())
     
@@ -36,9 +37,11 @@ async def lifespan(app: FastAPI):
 
     await db.pool.close()
 
-app = FastAPI(lifespan=lifespan)
+def make_app() -> FastAPI:
+    app = FastAPI(lifespan=_lifespan)
 
-# configure_logging()
+    # configure_logging()
 
-# app.add_middleware(APILoggingMiddleware)
-app.include_router(router)
+    # app.add_middleware(APILoggingMiddleware)
+    app.include_router(router)
+    return app
