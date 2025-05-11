@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from db.database import db
-from services.rest_service import router
-from services.grpc_service import MedicationScheduleServicer
-from grpc_package import med_schedule_pb2_grpc
+from app.db.database import db
+from app.services.rest_service import router
+from app.services.grpc_service import MedicationScheduleServicer
+from app.grpc_package import med_schedule_pb2_grpc
 import grpc
 from concurrent import futures
 import asyncio
@@ -23,7 +23,13 @@ async def serve():
     
 @asynccontextmanager
 async def _lifespan(app: FastAPI) -> AsyncGenerator[dict[str, Any], None]:
-    await db.create_pool()
+    try:
+        await db.create_pool()
+        if not db.pool:
+            raise RuntimeError("Не удалось создать пул соединений с БД")
+    except Exception as e:
+        print(f"Ошибка инициализации БД: {e}")
+        raise
 
     grpc_task = asyncio.create_task(serve())
     
@@ -35,7 +41,7 @@ async def _lifespan(app: FastAPI) -> AsyncGenerator[dict[str, Any], None]:
     except asyncio.CancelledError:
         pass
 
-    await db.pool.close()
+    await db.close_pool()
 
 def make_app() -> FastAPI:
     app = FastAPI(lifespan=_lifespan)

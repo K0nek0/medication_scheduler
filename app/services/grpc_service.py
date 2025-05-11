@@ -1,17 +1,17 @@
-from grpc_package import med_schedule_pb2_grpc
-from grpc_package.med_schedule_pb2 import (
+from app.grpc_package import med_schedule_pb2_grpc
+from app.grpc_package.med_schedule_pb2 import (
     ScheduleResponse,
     UserSchedulesResponse,
     ScheduleDetailResponse,
     NextTakingsResponse,
     NextTaking
 )
-from core.handler import create_schedule, get_schedules, get_schedule_detail, get_takings
-from core.utils import calculate_schedule_times
-from models.med_schedule_model import MedicationSchedule
+from app.core.handler import create_schedule, get_schedules, get_schedule_detail, get_takings
+from app.core.utils import calculate_schedule_times
+from app.models.med_schedule_model import MedicationSchedule
 from datetime import time
-from core.utils import generate_schedule_id
-from db.database import db
+from app.core.utils import generate_schedule_id
+from app.db.database import db
 # from logger.business_logger import business_logger
 
 class MedicationScheduleServicer(med_schedule_pb2_grpc.MedicationScheduleServiceServicer):

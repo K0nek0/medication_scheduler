@@ -1,5 +1,8 @@
-set shell := ["powershell.exe", "-NoProfile", "-Command"]
-    
+set shell := ["powershell.exe"]
+
+test:
+    pytest tests/rest
+
 generate-models:
     datamodel-codegen --input ./schemas/openapi.yaml --output ./app/models/models_auto.py --force
 
