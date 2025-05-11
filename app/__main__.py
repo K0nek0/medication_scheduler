@@ -1,7 +1,11 @@
 import uvicorn
-
-from main import make_app
+from app.main import make_app
 
 if __name__ == "__main__":
-    app = make_app()
-    uvicorn.run(app)
+    uvicorn.run(
+        "app.main:make_app",
+        host="127.0.0.1",
+        port=8000,
+        reload=True,
+        factory=True
+    )

@@ -24,9 +24,9 @@ async def serve():
 @asynccontextmanager
 async def _lifespan(app: FastAPI) -> AsyncGenerator[dict[str, Any], None]:
     try:
-        await db.create_pool()
-        if not db.pool:
-            raise RuntimeError("Не удалось создать пул соединений с БД")
+        await db.create_engine()
+        if not db.engine:
+            raise RuntimeError("Не удалось создать подключение к БД")
     except Exception as e:
         print(f"Ошибка инициализации БД: {e}")
         raise
@@ -41,7 +41,7 @@ async def _lifespan(app: FastAPI) -> AsyncGenerator[dict[str, Any], None]:
     except asyncio.CancelledError:
         pass
 
-    await db.close_pool()
+    await db.close_engine()
 
 def make_app() -> FastAPI:
     app = FastAPI(lifespan=_lifespan)
